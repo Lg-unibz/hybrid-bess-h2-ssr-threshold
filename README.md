@@ -88,7 +88,24 @@ The full annual demand series remains confidential and is not public in this com
 
 ## Citation
 
-See `CITATION.cff`. The DOI is intentionally left blank until Zenodo or GitHub generates one.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21220464.svg)](https://doi.org/10.5281/zenodo.21220464)
+
+If you use this repository, please cite it as:
+
+```bibtex
+@software{gambadori_hybrid_2026,
+  author       = {Gambadori, Lorenzo and Alberizzi, Jacopo C. and Renzi, Massimiliano},
+  title        = {Hybrid BESS-H2 SSR Threshold Public Companion},
+  month        = jul,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {v1.0.0-paper-submission},
+  doi          = {10.5281/zenodo.21220464},
+  url          = {https://doi.org/10.5281/zenodo.21220464}
+}
+```
+
+See also [CITATION.cff](file:///c:/Users/LGambadori/Downloads/hybrid-bess-h2-ssr-threshold-public/CITATION.cff).
 
 ## License
 
