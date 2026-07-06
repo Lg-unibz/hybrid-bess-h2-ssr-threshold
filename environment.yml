@@ -1,0 +1,11 @@
+name: hybrid-bess-h2-ssr-public
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - numpy
+  - pandas
+  - matplotlib
+  - pyomo
+  - highspy
+  - pip

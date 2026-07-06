@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this companion repository, please cite the associated manuscript and this software release."
+title: "Hybrid BESS-H2 SSR Threshold Public Companion"
+version: "v1.0.0-paper-submission"
+date-released: "2026-07-06"
+authors:
+  - family-names: "Gambadori"
+    given-names: "Lorenzo"
+    email: "lorenzo.gambadori@student.unibz.it"
+    affiliation: "Free University of Bozen-Bolzano"
+  - family-names: "Alberizzi"
+    given-names: "Jacopo C."
+    affiliation: "Free University of Bozen-Bolzano"
+  - family-names: "Renzi"
+    given-names: "Massimiliano"
+    affiliation: "Free University of Bozen-Bolzano"
+repository-code: "https://github.com/OWNER/REPOSITORY"
+abstract: "Public companion code and synthetic demo data for a MILP study of the transition from battery-only to hybrid battery-hydrogen storage under self-sufficiency constraints."
+keywords:
+  - "battery energy storage"
+  - "hydrogen storage"
+  - "self-sufficiency ratio"
+  - "MILP"
+  - "PV prosumer"
+license: "MIT"
+

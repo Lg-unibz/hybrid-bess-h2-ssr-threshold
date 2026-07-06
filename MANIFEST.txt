@@ -1,0 +1,135 @@
+Public companion repository manifest
+====================================
+
+.gitignore
+  Ignore rules for Python caches, environments, private input folders, logs, and solver by-products.
+
+CITATION.cff
+  Citation metadata with version placeholder v1.0.0-paper-submission. DOI and final authors should be updated before release.
+
+DATA_AVAILABILITY.md
+  Explains confidential demand restrictions, synthetic demo data, public PVGIS/PUN sources, and expected full-scale paths.
+
+LICENSE
+  MIT license text for the public code and synthetic demo assets, subject to author approval before release.
+
+README.md
+  Main project overview, quick start, repository structure, data limitations, and citation notes.
+
+docs/LOCAL_ALPHA_TEST.md
+  Local-machine alpha test instructions for an isolated download of the public companion.
+
+REPRODUCIBILITY.md
+  Three reproducibility levels: demo execution, aggregate paper-result inspection, and full confidential rerun.
+
+configs/demo_case_study.json
+  Non-identifying technical and economic assumptions used by the synthetic demo.
+
+configs/paper_scenarios.json
+  Clean paper-scale scenario configuration without private paths or raw input data.
+
+configs/paper_weather_variants.json
+  Representative weather-year labels and PVGIS year identifiers without site coordinates.
+
+data/demo/README.md
+  Notes that the demo data are synthetic and non-confidential.
+
+data/demo/seasonal_weeks/autumn_week.csv
+  Synthetic hourly autumn-week demand, PV, and price profile for the demo.
+
+data/demo/seasonal_weeks/spring_week.csv
+  Synthetic hourly spring-week demand, PV, and price profile for the demo.
+
+data/demo/seasonal_weeks/summer_week.csv
+  Synthetic hourly summer-week demand, PV, and price profile for the demo.
+
+data/demo/seasonal_weeks/winter_week.csv
+  Synthetic hourly winter-week demand, PV, and price profile for the demo.
+
+data/public_sources/README.md
+  Notes on PVGIS and PUN source data and attribution checks.
+
+data/schemas/demo_timeseries.schema.json
+  JSON schema describing the seasonal-week demo CSV rows.
+
+docs/FIGURE_REPRODUCTION.md
+  Maps manuscript figures/tables to confidential reruns or aggregate export paths.
+
+docs/RELEASE_CHECKLIST.md
+  Pre-release checks for demo execution, tracked files, confidentiality, citation, and archiving.
+
+environment.yml
+  Conda environment definition for Pyomo, HiGHS, pandas, NumPy, and plotting dependencies.
+
+requirements-gurobi.txt
+  Optional Gurobi Python dependency.
+
+requirements.txt
+  Python dependencies for the open-source HiGHS demo path.
+
+results/demo/.gitkeep
+  Keeps the demo-output directory visible before running the workflow.
+
+results/paper_aggregated/README.md
+  Explains included and missing aggregate paper-output CSVs and how to export them from a private run summary.
+
+results/paper_aggregated/baseline_absolute_values_median_year.csv
+  Non-confidential aggregate baseline values from the manuscript table.
+
+scripts/__init__.py
+  Allows module execution of scripts.
+
+scripts/create_demo_dataset.py
+  Standard-library generator for the synthetic seasonal-week CSVs.
+
+scripts/run_demo.py
+  Runs the synthetic seasonal-week MILP demo and writes summary/capacity outputs.
+
+scripts/run_paper_scale.py
+  Safe preflight helper that reports the expected full-scale input files without submitting jobs.
+
+src/__init__.py
+  Public package marker.
+
+src/analysis/__init__.py
+  Analysis package marker.
+
+src/analysis/export_paper_aggregates.py
+  Exports non-confidential aggregate CSVs from a private merged run_summary file.
+
+src/config/__init__.py
+  Config package marker.
+
+src/config/constants.py
+  Physical constants used by the hybrid model.
+
+src/config/experiment_config.py
+  Public path constants, H2 performance map, and run-summary column list.
+
+src/data/__init__.py
+  Data package marker.
+
+src/data/demo_loader.py
+  Loader and validator for the synthetic seasonal-week demo files.
+
+src/experiments/__init__.py
+  Experiment helper package marker.
+
+src/experiments/scenario_factory.py
+  Scenario/economic assumption resolver copied from the private workflow and used by the demo.
+
+src/optimization/__init__.py
+  Optimization package marker.
+
+src/optimization/constraints.py
+  Financial helper functions and SSR-to-grid-import constraint conversion.
+
+src/optimization/extractors.py
+  Time-series and KPI extraction from solved Pyomo models.
+
+src/optimization/hybrid_builder.py
+  Core Pyomo MILP builder for hybrid BESS-H2 sizing and dispatch.
+
+src/optimization/solver.py
+  Solver wrapper supporting Gurobi, HiGHS, CBC, and GLPK where available.
+

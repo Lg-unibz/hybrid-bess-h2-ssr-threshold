@@ -1,0 +1,25 @@
+{
+  "note": "Representative PVGIS weather-year identifiers used by the paper-scale workflow. Site coordinates and private identifiers are intentionally omitted.",
+  "selected_years": {
+    "negative_extreme": {
+      "pv_year": 2014,
+      "alignment_year": 2014,
+      "label": "unfavourable_solar_year",
+      "source_type": "historical_year"
+    },
+    "median": {
+      "pv_year": 2005,
+      "alignment_year": 2005,
+      "label": "median_solar_year",
+      "source_type": "historical_year"
+    },
+    "positive_extreme": {
+      "pv_year": 2011,
+      "alignment_year": 2011,
+      "label": "favourable_solar_year",
+      "source_type": "historical_year"
+    }
+  },
+  "selection_method": "Representative historical PVGIS years selected in the private workflow from annual plane-of-array irradiation/specific-yield statistics."
+}
+

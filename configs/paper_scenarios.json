@@ -1,0 +1,124 @@
+{
+  "campaign": {
+    "campaign_id": "paper_scale_sensitivity",
+    "description": "Full paper-scale sensitivity campaign. Exact rerun requires confidential full-year demand data.",
+    "demand_year": 2024,
+    "pv_year": 2005,
+    "expand_weather_variants": true,
+    "weather_profiles_path": "configs/paper_weather_variants.json",
+    "weather_variants": [
+      "negative_extreme",
+      "median",
+      "positive_extreme"
+    ],
+    "append_weather_suffix_to_study_id": true,
+    "timestep_hours": 1.0,
+    "ssr_targets": [
+      0.7,
+      0.8,
+      0.9,
+      1.0
+    ],
+    "ssr_refine_step": 0.02,
+    "ssr_threshold_epsilon": 0.001,
+    "ssr_threshold_max_iterations": 12,
+    "output_root": "results/sensitivity/paper_scale_sensitivity"
+  },
+  "baseline_parameters": {
+    "pun_year": 2024,
+    "price_multiplier": 2.0,
+    "bess_capex_eur_kwh": 300.0,
+    "bess_rte": 0.9,
+    "hes_capex": {
+      "ely_eur_kw": 1000.0,
+      "fc_eur_kw": 1000.0,
+      "tank_eur_kg": 500.0
+    },
+    "hes_efficiency": {
+      "eta_ely": 0.65,
+      "eta_fc": 0.5
+    },
+    "grid_limit_multiplier": 1.0
+  },
+  "ofat_scenarios": [
+    {"scenario_id": "OFAT-Baseline", "description": "All base values", "overrides": {}},
+    {"scenario_id": "OFAT-PUN-Low", "description": "PUN year = 2020", "overrides": {"pun_year": 2020}},
+    {"scenario_id": "OFAT-PUN-High", "description": "PUN year = 2022", "overrides": {"pun_year": 2022}},
+    {"scenario_id": "OFAT-Mult-Low", "description": "Price multiplier = 1.5", "overrides": {"price_multiplier": 1.5}},
+    {"scenario_id": "OFAT-Mult-High", "description": "Price multiplier = 3.0", "overrides": {"price_multiplier": 3.0}},
+    {"scenario_id": "OFAT-BESS-Cap-Low", "description": "BESS CAPEX = 200 EUR/kWh", "overrides": {"bess_capex_eur_kwh": 200.0}},
+    {"scenario_id": "OFAT-BESS-Cap-High", "description": "BESS CAPEX = 480 EUR/kWh", "overrides": {"bess_capex_eur_kwh": 480.0}},
+    {"scenario_id": "OFAT-BESS-Eff-Low", "description": "BESS round-trip efficiency = 0.80", "overrides": {"bess_rte": 0.8}},
+    {"scenario_id": "OFAT-BESS-Eff-High", "description": "BESS round-trip efficiency = 0.95", "overrides": {"bess_rte": 0.95}},
+    {
+      "scenario_id": "OFAT-HES-Cap-Low",
+      "description": "Low hydrogen-chain CAPEX",
+      "overrides": {"hes_capex": {"ely_eur_kw": 400.0, "fc_eur_kw": 400.0, "tank_eur_kg": 266.0}}
+    },
+    {
+      "scenario_id": "OFAT-HES-Cap-High",
+      "description": "High hydrogen-chain CAPEX",
+      "overrides": {"hes_capex": {"ely_eur_kw": 2500.0, "fc_eur_kw": 3000.0, "tank_eur_kg": 1000.0}}
+    },
+    {
+      "scenario_id": "OFAT-HES-Eff-Low",
+      "description": "Low hydrogen-chain conversion efficiency",
+      "overrides": {"hes_efficiency": {"eta_ely": 0.55, "eta_fc": 0.45}}
+    },
+    {
+      "scenario_id": "OFAT-HES-Eff-High",
+      "description": "High hydrogen-chain conversion efficiency",
+      "overrides": {"hes_efficiency": {"eta_ely": 0.75, "eta_fc": 0.6}}
+    },
+    {"scenario_id": "OFAT-Grid-Low", "description": "Restrictive grid exchange limit", "overrides": {"grid_limit_multiplier": 0.5}},
+    {"scenario_id": "OFAT-Grid-High", "description": "Reinforced grid exchange limit", "overrides": {"grid_limit_multiplier": 1.5}}
+  ],
+  "combined_scenarios": [
+    {
+      "scenario_id": "S-Comb-ProH2",
+      "description": "Assumptions favourable to hydrogen storage",
+      "overrides": {
+        "pun_year": 2022,
+        "grid_limit_multiplier": 0.5,
+        "bess_capex_eur_kwh": 480.0,
+        "bess_rte": 0.8,
+        "hes_capex": {"ely_eur_kw": 400.0, "fc_eur_kw": 400.0, "tank_eur_kg": 266.0},
+        "hes_efficiency": {"eta_ely": 0.75, "eta_fc": 0.6}
+      }
+    },
+    {
+      "scenario_id": "S-Comb-ProBESS",
+      "description": "Assumptions favourable to battery storage",
+      "overrides": {
+        "pun_year": 2020,
+        "bess_capex_eur_kwh": 200.0,
+        "bess_rte": 0.95,
+        "hes_capex": {"ely_eur_kw": 2500.0, "fc_eur_kw": 3000.0, "tank_eur_kg": 1000.0},
+        "hes_efficiency": {"eta_ely": 0.55, "eta_fc": 0.45}
+      }
+    },
+    {
+      "scenario_id": "S-Comb-Future",
+      "description": "Mature storage-technology assumptions",
+      "overrides": {
+        "pun_year": 2024,
+        "bess_capex_eur_kwh": 200.0,
+        "bess_rte": 0.95,
+        "hes_capex": {"ely_eur_kw": 400.0, "fc_eur_kw": 400.0, "tank_eur_kg": 266.0},
+        "hes_efficiency": {"eta_ely": 0.75, "eta_fc": 0.6}
+      }
+    },
+    {
+      "scenario_id": "S-Comb-WorstCase",
+      "description": "High storage CAPEX and low conversion efficiency",
+      "overrides": {
+        "pun_year": 2024,
+        "bess_capex_eur_kwh": 480.0,
+        "bess_rte": 0.8,
+        "hes_capex": {"ely_eur_kw": 2500.0, "fc_eur_kw": 3000.0, "tank_eur_kg": 1000.0},
+        "hes_efficiency": {"eta_ely": 0.55, "eta_fc": 0.45}
+      }
+    }
+  ]
+}
+

@@ -1,0 +1,8 @@
+{
+  "dataset": "synthetic seasonal weeks",
+  "solver": "highs",
+  "rows": 672,
+  "ssr_targets": [
+    0.7
+  ]
+}

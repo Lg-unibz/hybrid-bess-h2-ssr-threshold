@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Environments and local settings
+.venv/
+venv/
+env/
+.env
+*.local
+
+# Private/full-scale input folders that must not be committed
+input/private/
+input/raw/
+input/external_data/
+raw/
+external_data/
+logs/
+runs/
+output/
+
+# Solver and HPC by-products
+*.lp
+*.mps
+*.sol
+*.mst
+*.bas
+*.prm
+*.log
+*.out
+*.err
+slurm-*.out
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

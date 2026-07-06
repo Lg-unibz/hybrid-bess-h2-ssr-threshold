@@ -1,0 +1,90 @@
+{
+  "case_study": {
+    "name": "Synthetic public demo prosumer",
+    "timezone": "Europe/Rome",
+    "grid_connected": true,
+    "note": "Non-confidential synthetic demonstration case. It is not the measured agricultural facility."
+  },
+  "pv_system": {
+    "peakpower_kw": 77.9,
+    "tilt_deg": 15,
+    "azimuth_deg": 30,
+    "loss_percent": 14.0,
+    "peakpower_default": 1.0,
+    "module_efficiency_percent": 18.5,
+    "inverter_efficiency_percent": 96.0,
+    "performance_ratio_percent": 86.0,
+    "temp_coeff_pmax": -0.004,
+    "noct": 45.0
+  },
+  "finance": {
+    "financial_mode": "crf_real",
+    "real_discount_rate": 0.07,
+    "project_lifetime_years": 20
+  },
+  "market": {
+    "price_year_baseline": 2024,
+    "price_multiplier_buy_over_sell": 2.0
+  },
+  "storage": {
+    "roundtrip_efficiency_percent": 90.0,
+    "capex_eur_kwh": 300.0,
+    "opex_variable_eur_per_kwh_throughput": 0.0,
+    "soc_min_percent": 10.0,
+    "soc_max_percent": 90.0,
+    "self_discharge_percent_per_month": 3.0,
+    "default_c_rate_kw_per_kwh": 0.5,
+    "capacity_upper_bound_kwh": 1000.0,
+    "economics": {
+      "lifetime_years": 10,
+      "replacement_fraction_of_initial_capex": 0.8,
+      "fixed_opex_fraction_of_initial_capex": 0.025
+    }
+  },
+  "grid": {
+    "max_import_kw": 58.0,
+    "max_export_kw": 58.0
+  },
+  "simulation_settings": {
+    "timestep_hours": 1,
+    "year": 2019
+  },
+  "hydrogen": {
+    "electrolyzer": {
+      "capacity_kw": 100.0,
+      "efficiency_percent": 65.0,
+      "min_load_percent": 10.0,
+      "capex_eur_kw": 1000.0,
+      "opex_variable_eur_per_kwh_input": 0.0,
+      "economics": {
+        "lifetime_years": 10,
+        "replacement_fraction_of_initial_capex": 0.4,
+        "fixed_opex_fraction_of_initial_capex": 0.0275
+      }
+    },
+    "fuel_cell": {
+      "capacity_kw": 58.0,
+      "electrical_efficiency_percent": 50.0,
+      "min_load_percent": 10.0,
+      "capex_eur_kw": 1000.0,
+      "opex_variable_eur_per_kwh_output": 0.0,
+      "economics": {
+        "lifetime_years": 10,
+        "replacement_fraction_of_initial_capex": 0.4,
+        "fixed_opex_fraction_of_initial_capex": 0.0275
+      }
+    },
+    "tank": {
+      "capacity_kg": 700.0,
+      "min_soc_percent": 5.0,
+      "capex_eur_kg": 500.0,
+      "opex_variable_eur_per_kg_throughput": 0.0,
+      "economics": {
+        "lifetime_years": 20,
+        "replacement_fraction_of_initial_capex": 0.0,
+        "fixed_opex_fraction_of_initial_capex": 0.01
+      }
+    }
+  }
+}
+

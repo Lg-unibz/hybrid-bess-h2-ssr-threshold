@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synthetic seasonal-week demo time series row",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "season",
+    "demand_kwh",
+    "pv_production_kwh",
+    "price_buy_eur_kwh",
+    "price_sell_eur_kwh"
+  ],
+  "properties": {
+    "timestamp": {"type": "string", "format": "date-time"},
+    "season": {"type": "string", "enum": ["winter", "spring", "summer", "autumn"]},
+    "demand_kwh": {"type": "number", "minimum": 0},
+    "pv_production_kwh": {"type": "number", "minimum": 0},
+    "price_buy_eur_kwh": {"type": "number", "minimum": 0},
+    "price_sell_eur_kwh": {"type": "number", "minimum": 0}
+  }
+}
+

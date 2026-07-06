@@ -1,0 +1,3 @@
+run_mode,ssr_target,achieved_ssr,bess_capacity_kwh,electrolyzer_capacity_kw,fuel_cell_capacity_kw,tank_capacity_kg
+unconstrained,,0.4111625659376038,-0.0,0.0,0.0,0.0
+ssr_70,0.7,0.7000000000000002,144.31648990743506,0.0,0.0,0.0
