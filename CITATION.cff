@@ -14,7 +14,7 @@ authors:
   - family-names: "Renzi"
     given-names: "Massimiliano"
     affiliation: "Free University of Bozen-Bolzano"
-repository-code: "https://github.com/OWNER/REPOSITORY"
+repository-code: "https://github.com/Lg-unibz/hybrid-bess-h2-ssr-threshold"
 abstract: "Public companion code and synthetic demo data for a MILP study of the transition from battery-only to hybrid battery-hydrogen storage under self-sufficiency constraints."
 keywords:
   - "battery energy storage"
