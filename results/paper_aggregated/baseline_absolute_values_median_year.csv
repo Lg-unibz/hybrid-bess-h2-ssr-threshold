@@ -1,8 +1,0 @@
-indicator,unit,ssr_70,ssr_80,ssr_90,ssr_100,source_note
-TAC,kEUR_per_year,3.17,8.00,22.64,45.78,Transcribed from the manuscript table for baseline median-year absolute values.
-BESS capacity,kWh,77.3,119.6,240.0,304.0,Transcribed from the manuscript table for baseline median-year absolute values.
-Electrolyzer capacity,kW,0.00,8.87,9.13,14.98,Transcribed from the manuscript table for baseline median-year absolute values.
-Fuel-cell capacity,kW,0.00,3.13,7.80,12.96,Transcribed from the manuscript table for baseline median-year absolute values.
-H2 tank capacity,kg,0.0,21.5,186.2,526.4,Transcribed from the manuscript table for baseline median-year absolute values.
-Annual H2 use,kg_per_year,0.0,225.8,411.4,713.1,Transcribed from the manuscript table for baseline median-year absolute values.
-

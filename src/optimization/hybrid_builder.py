@@ -62,13 +62,29 @@ class HybridModelInputs:
     df: pd.DataFrame
     technical: HybridTechnicalInputs
     economics: HybridEconomicInputs
+    allow_grid_to_bess_charging: bool = True
 
 
 def build_hybrid_model(inputs: HybridModelInputs) -> pyo.ConcreteModel:
     """Build one integrated hybrid MILP with optional SSR epsilon-constraint.
 
-    Governing electricity node equation:
-    PV_used + BESS_dis + Grid_buy + FC = Load + BESS_ch + Grid_sell + Ely.
+    Strict Green H2 & Power Balance Routing:
+    - PV decomposition:
+        P_pv(t) = P_pv_to_load(t) + P_pv_to_bess(t) + P_pv_to_ely(t) + P_pv_to_grid(t) + P_pv_curt(t)
+    - Electricity load balance:
+        P_pv_to_load(t) + P_bess_dis(t) + P_grid_to_load(t) + P_fc(t) == Demand(t)
+    - BESS charge balance (PV + Grid, unless explicitly disabled):
+        P_bess_ch(t) == P_pv_to_bess(t) + P_grid_to_bess(t)
+    - Electrolyzer power source (STRICTLY DIRECT PV ONLY):
+        P_ely(t) == P_pv_to_ely(t)
+    - Grid buy total:
+        P_grid_buy(t) == P_grid_to_load(t) + P_grid_to_bess(t)
+    - Grid sell total:
+        P_grid_sell(t) == P_pv_to_grid(t)
+    - Initial & Terminal Storage States:
+        Exact periodic cyclicality with no net free initial energy:
+        SOC_end == SOC_start and Tank_end == Tank_start, with both initial
+        states co-optimized inside their technical capacity bounds.
     """
     tcfg = inputs.technical
     ecfg = inputs.economics
@@ -84,7 +100,6 @@ def build_hybrid_model(inputs: HybridModelInputs) -> pyo.ConcreteModel:
 
     eta_ch = tcfg.bess_eta_roundtrip**0.5
     eta_dis = tcfg.bess_eta_roundtrip**0.5
-
     c_rate = tcfg.bess_default_c_rate_kw_per_kwh
 
     p_ch_upper = c_rate * tcfg.bess_capacity_upper_bound_kwh
@@ -137,46 +152,114 @@ def build_hybrid_model(inputs: HybridModelInputs) -> pyo.ConcreteModel:
         initialize=ecfg.tank_opex_variable_eur_per_kg_throughput
     )
 
+    # Decision variables for sizing
     m.bess_add_kwh = pyo.Var(within=pyo.NonNegativeReals, bounds=(0.0, tcfg.bess_capacity_upper_bound_kwh))
     m.ely_capacity_kw = pyo.Var(within=pyo.NonNegativeReals, bounds=(0.0, tcfg.ely_capacity_upper_bound_kw))
     m.fc_capacity_kw = pyo.Var(within=pyo.NonNegativeReals, bounds=(0.0, tcfg.fc_capacity_upper_bound_kw))
     m.tank_capacity_kg = pyo.Var(within=pyo.NonNegativeReals, bounds=(0.0, tcfg.tank_capacity_upper_bound_kg))
 
-    m.soc_start_kwh = pyo.Var(within=pyo.NonNegativeReals, bounds=(0.0, soc_upper))
-    m.tank_start_kg = pyo.Var(within=pyo.NonNegativeReals, bounds=(0.0, tcfg.tank_capacity_upper_bound_kg))
-
+    # BESS variables
     m.p_bess_ch_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, p_ch_upper))
     m.p_bess_dis_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, p_dis_upper))
     m.bess_soc_kwh = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, soc_upper))
-    m.u_bess_ch = pyo.Var(m.T, within=pyo.Binary)
-    m.u_bess_dis = pyo.Var(m.T, within=pyo.Binary)
+    m.bess_soc_initial_kwh = pyo.Var(within=pyo.NonNegativeReals, bounds=(0.0, soc_upper))
 
-    m.p_pv_used_kw = pyo.Var(m.T, within=pyo.NonNegativeReals)
+    # PV decomposition variables (Explicit sub-flows)
+    m.p_pv_to_load_kw = pyo.Var(m.T, within=pyo.NonNegativeReals)
+    m.p_pv_to_bess_kw = pyo.Var(m.T, within=pyo.NonNegativeReals)
+    m.p_pv_to_ely_kw = pyo.Var(m.T, within=pyo.NonNegativeReals)
+    m.p_pv_to_grid_kw = pyo.Var(m.T, within=pyo.NonNegativeReals)
     m.p_pv_curtailed_kw = pyo.Var(m.T, within=pyo.NonNegativeReals)
 
+    # Grid sub-flow variables
+    m.p_grid_to_load_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, tcfg.grid_max_import_kw))
+    m.p_grid_to_bess_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, tcfg.grid_max_import_kw))
     m.p_grid_buy_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, tcfg.grid_max_import_kw))
     m.p_grid_sell_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, tcfg.grid_max_export_kw))
 
+    # Hydrogen components
     m.p_ely_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, tcfg.ely_capacity_upper_bound_kw))
     m.p_fc_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, tcfg.fc_capacity_upper_bound_kw))
     m.tank_mass_kg = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, tcfg.tank_capacity_upper_bound_kg))
+    m.tank_mass_initial_kg = pyo.Var(
+        within=pyo.NonNegativeReals,
+        bounds=(0.0, tcfg.tank_capacity_upper_bound_kg),
+    )
     m.u_ely = pyo.Var(m.T, within=pyo.Binary)
 
+    # Legacy alias variable for total PV used (for compatibility with postprocessors)
+    m.p_pv_used_kw = pyo.Var(m.T, within=pyo.NonNegativeReals)
+
+    def _c_pv_used_sum(model: pyo.ConcreteModel, t: int) -> Any:
+        return model.p_pv_used_kw[t] == (
+            model.p_pv_to_load_kw[t]
+            + model.p_pv_to_bess_kw[t]
+            + model.p_pv_to_ely_kw[t]
+            + model.p_pv_to_grid_kw[t]
+        )
+
+    m.c_pv_used_sum = pyo.Constraint(m.T, rule=_c_pv_used_sum)
+
+    # 1. PV generation complete split
     def _c_pv_split(model: pyo.ConcreteModel, t: int) -> Any:
-        return model.p_pv_used_kw[t] + model.p_pv_curtailed_kw[t] == model.pv_kw[t]
+        return (
+            model.p_pv_to_load_kw[t]
+            + model.p_pv_to_bess_kw[t]
+            + model.p_pv_to_ely_kw[t]
+            + model.p_pv_to_grid_kw[t]
+            + model.p_pv_curtailed_kw[t]
+            == model.pv_kw[t]
+        )
 
     m.c_pv_split = pyo.Constraint(m.T, rule=_c_pv_split)
 
-    def _c_power_balance(model: pyo.ConcreteModel, t: int) -> Any:
+    # 2. Electricity demand balance (Demand supplied by PV, BESS, Grid, FC)
+    def _c_demand_balance(model: pyo.ConcreteModel, t: int) -> Any:
         return (
-            model.p_pv_used_kw[t] + model.p_bess_dis_kw[t] + model.p_grid_buy_kw[t] + model.p_fc_kw[t]
-            == model.demand_kw[t] + model.p_bess_ch_kw[t] + model.p_grid_sell_kw[t] + model.p_ely_kw[t]
+            model.p_pv_to_load_kw[t]
+            + model.p_bess_dis_kw[t]
+            + model.p_grid_to_load_kw[t]
+            + model.p_fc_kw[t]
+            == model.demand_kw[t]
         )
 
-    m.c_power_balance = pyo.Constraint(m.T, rule=_c_power_balance)
+    m.c_demand_balance = pyo.Constraint(m.T, rule=_c_demand_balance)
 
+    # 3. BESS charging source balance (PV + Grid -> BESS)
+    def _c_bess_ch_source(model: pyo.ConcreteModel, t: int) -> Any:
+        return model.p_bess_ch_kw[t] == model.p_pv_to_bess_kw[t] + model.p_grid_to_bess_kw[t]
+
+    m.c_bess_ch_source = pyo.Constraint(m.T, rule=_c_bess_ch_source)
+
+    # Optional robustness formulation: grid imports can meet instantaneous load,
+    # but cannot be shifted through the BESS.
+    if not inputs.allow_grid_to_bess_charging:
+        m.c_no_grid_to_bess = pyo.Constraint(
+            m.T,
+            rule=lambda model, t: model.p_grid_to_bess_kw[t] == 0.0,
+        )
+
+    # 4. Strict Green H2: Electrolyzer powered ONLY by direct PV
+    def _c_green_h2_source(model: pyo.ConcreteModel, t: int) -> Any:
+        return model.p_ely_kw[t] == model.p_pv_to_ely_kw[t]
+
+    m.c_green_h2_source = pyo.Constraint(m.T, rule=_c_green_h2_source)
+
+    # 5. Grid buy decomposition & limits
+    def _c_grid_buy_sum(model: pyo.ConcreteModel, t: int) -> Any:
+        return model.p_grid_buy_kw[t] == model.p_grid_to_load_kw[t] + model.p_grid_to_bess_kw[t]
+
+    m.c_grid_buy_sum = pyo.Constraint(m.T, rule=_c_grid_buy_sum)
+
+    # 6. Grid sell definition (PV to grid)
+    def _c_grid_sell_def(model: pyo.ConcreteModel, t: int) -> Any:
+        return model.p_grid_sell_kw[t] == model.p_pv_to_grid_kw[t]
+
+    m.c_grid_sell_def = pyo.Constraint(m.T, rule=_c_grid_sell_def)
+
+    # 7. BESS dynamics and SOC tracking
     def _c_bess_soc(model: pyo.ConcreteModel, t: int) -> Any:
-        soc_prev = model.soc_start_kwh if t == 0 else model.bess_soc_kwh[t - 1]
+        soc_prev = model.bess_soc_initial_kwh if t == 0 else model.bess_soc_kwh[t - 1]
         return model.bess_soc_kwh[t] == (
             soc_prev * (1.0 - model.bess_self_discharge * dt_h)
             + model.eta_ch * model.p_bess_ch_kw[t] * dt_h
@@ -193,47 +276,80 @@ def build_hybrid_model(inputs: HybridModelInputs) -> pyo.ConcreteModel:
 
     m.c_bess_soc_low = pyo.Constraint(m.T, rule=_c_bess_soc_low)
     m.c_bess_soc_up = pyo.Constraint(m.T, rule=_c_bess_soc_up)
+    m.c_bess_soc_initial_low = pyo.Constraint(
+        expr=m.bess_soc_initial_kwh >= m.bess_soc_min * m.bess_add_kwh
+    )
+    m.c_bess_soc_initial_up = pyo.Constraint(
+        expr=m.bess_soc_initial_kwh <= m.bess_soc_max * m.bess_add_kwh
+    )
 
-    m.c_bess_ch_big_m = pyo.Constraint(m.T, rule=lambda model, t: model.p_bess_ch_kw[t] <= p_ch_upper * model.u_bess_ch[t])
-    m.c_bess_dis_big_m = pyo.Constraint(m.T, rule=lambda model, t: model.p_bess_dis_kw[t] <= p_dis_upper * model.u_bess_dis[t])
-    m.c_bess_ch_cap = pyo.Constraint(m.T, rule=lambda model, t: model.p_bess_ch_kw[t] <= model.bess_c_rate * model.bess_add_kwh)
-    m.c_bess_dis_cap = pyo.Constraint(m.T, rule=lambda model, t: model.p_bess_dis_kw[t] <= model.bess_c_rate * model.bess_add_kwh)
-    m.c_bess_mode = pyo.Constraint(m.T, rule=lambda model, t: model.u_bess_ch[t] + model.u_bess_dis[t] <= 1)
+    # BESS capacity limits (Continuous C-rate formulation with non-simultaneity guaranteed by round-trip losses eta < 1)
+    m.c_bess_ch_cap = pyo.Constraint(
+        m.T, rule=lambda model, t: model.p_bess_ch_kw[t] <= model.bess_c_rate * model.bess_add_kwh
+    )
+    m.c_bess_dis_cap = pyo.Constraint(
+        m.T, rule=lambda model, t: model.p_bess_dis_kw[t] <= model.bess_c_rate * model.bess_add_kwh
+    )
 
-    m.c_soc_start_low = pyo.Constraint(expr=m.soc_start_kwh >= m.bess_soc_min * m.bess_add_kwh)
-    m.c_soc_start_up = pyo.Constraint(expr=m.soc_start_kwh <= m.bess_soc_max * m.bess_add_kwh)
-    m.c_soc_cycle = pyo.Constraint(expr=m.bess_soc_kwh[n_steps - 1] >= m.soc_start_kwh)
+    # Exact annual periodicity: no net energy can be borrowed from the initial state.
+    m.c_bess_soc_cycle = pyo.Constraint(
+        expr=m.bess_soc_kwh[n_steps - 1] == m.bess_soc_initial_kwh
+    )
 
+    # 8. Hydrogen tank mass balance and cyclicality
     def _c_tank_balance(model: pyo.ConcreteModel, t: int) -> Any:
-        m_prev = model.tank_start_kg if t == 0 else model.tank_mass_kg[t - 1]
+        m_prev = model.tank_mass_initial_kg if t == 0 else model.tank_mass_kg[t - 1]
         m_in_kg = (model.p_ely_kw[t] * model.eta_ely / model.h2_lhv_kwh_per_kg) * dt_h
         m_out_kg = (model.p_fc_kw[t] / (model.eta_fc * model.h2_lhv_kwh_per_kg)) * dt_h
         return model.tank_mass_kg[t] == m_prev + m_in_kg - m_out_kg
 
     m.c_tank_balance = pyo.Constraint(m.T, rule=_c_tank_balance)
-    m.c_tank_low = pyo.Constraint(m.T, rule=lambda model, t: model.tank_mass_kg[t] >= model.tank_min_soc * model.tank_capacity_kg)
-    m.c_tank_up = pyo.Constraint(m.T, rule=lambda model, t: model.tank_mass_kg[t] <= model.tank_capacity_kg)
-    m.c_tank_start_low = pyo.Constraint(expr=m.tank_start_kg >= m.tank_min_soc * m.tank_capacity_kg)
-    m.c_tank_start_up = pyo.Constraint(expr=m.tank_start_kg <= m.tank_capacity_kg)
-    m.c_tank_cycle = pyo.Constraint(expr=m.tank_mass_kg[n_steps - 1] >= m.tank_start_kg)
+    m.c_tank_low = pyo.Constraint(
+        m.T, rule=lambda model, t: model.tank_mass_kg[t] >= model.tank_min_soc * model.tank_capacity_kg
+    )
+    m.c_tank_up = pyo.Constraint(
+        m.T, rule=lambda model, t: model.tank_mass_kg[t] <= model.tank_capacity_kg
+    )
+    m.c_tank_initial_low = pyo.Constraint(
+        expr=m.tank_mass_initial_kg >= m.tank_min_soc * m.tank_capacity_kg
+    )
+    m.c_tank_initial_up = pyo.Constraint(
+        expr=m.tank_mass_initial_kg <= m.tank_capacity_kg
+    )
+    # Exact annual periodicity prevents net withdrawal of initial hydrogen.
+    m.c_tank_cycle = pyo.Constraint(
+        expr=m.tank_mass_kg[n_steps - 1] == m.tank_mass_initial_kg
+    )
+
+    # 9. Electrolyzer and Fuel Cell operation
+    # Maximum instantaneous PV available serves as tight physical Big-M for ELY
+    max_pv_peak = max(pv_kw) if len(pv_kw) > 0 else 100.0
 
     m.c_ely_cap = pyo.Constraint(m.T, rule=lambda model, t: model.p_ely_kw[t] <= model.ely_capacity_kw)
     m.c_ely_mode = pyo.Constraint(
         m.T,
-        rule=lambda model, t: model.p_ely_kw[t] <= tcfg.ely_capacity_upper_bound_kw * model.u_ely[t],
+        rule=lambda model, t: model.p_ely_kw[t] <= max_pv_peak * model.u_ely[t],
     )
     m.c_ely_min_load = pyo.Constraint(
         m.T,
         rule=lambda model, t: model.p_ely_kw[t]
         >= model.ely_min_load * model.ely_capacity_kw
-        - model.ely_min_load * tcfg.ely_capacity_upper_bound_kw * (1 - model.u_ely[t]),
+        - model.ely_min_load * max_pv_peak * (1 - model.u_ely[t]),
     )
     m.c_fc_up = pyo.Constraint(m.T, rule=lambda model, t: model.p_fc_kw[t] <= model.fc_capacity_kw)
 
+    # 10. SSR target constraint on annual grid imports
     if inputs.ssr_target is not None:
         max_grid_import_kwh = max_grid_import_from_ssr(float(df["demand_kwh"].sum()), inputs.ssr_target)
         m.c_ssr_target = pyo.Constraint(expr=sum(m.p_grid_buy_kw[t] for t in m.T) * dt_h <= max_grid_import_kwh)
 
+    # 11. BESS-only mode enforcement if run_mode is bess_only
+    if inputs.run_mode == "bess_only":
+        m.ely_capacity_kw.fix(0.0)
+        m.fc_capacity_kw.fix(0.0)
+        m.tank_capacity_kg.fix(0.0)
+
+    # Objective: TAC minimization
     def _objective(model: pyo.ConcreteModel) -> Any:
         grid_exchange_eur = sum(
             (
@@ -274,7 +390,6 @@ def build_hybrid_model(inputs: HybridModelInputs) -> pyo.ConcreteModel:
             + model.tank_capacity_kg * model.tank_opex_fixed_eur_per_kg_year
         )
 
-        # TAC = annualized CAPEX + fixed OPEX + variable OPEX + grid exchange.
         return (
             annualized_capex_total_eur
             + opex_fixed_bess_h2_eur

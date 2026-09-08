@@ -1,0 +1,23 @@
+parameter,symbol,baseline_value,unit,category
+PV peak power,P_PV_nom,77.9,kWp,Solar Generation
+PV tilt / azimuth,beta / gamma,15 / 30,deg,Solar Generation
+PV performance ratio,PR,86.0,%,Solar Generation
+BESS initial CAPEX,c_BESS,300,EUR/kWh,BESS
+BESS round-trip efficiency,eta_BESS_rt,0.90,-,BESS
+BESS state of charge limits,"SOC_min, SOC_max","0.10, 0.90",-,BESS
+BESS self-discharge rate,sigma_BESS,3.0,%/month,BESS
+BESS nominal C-rate,C_rate,0.5,h^-1,BESS
+BESS lifetime / replacement cost,L_BESS / f_rep,10 / 0.80,years / fraction,BESS
+Electrolyzer CAPEX,c_ELY,1000,EUR/kW,Hydrogen System
+Electrolyzer net efficiency (LHV),eta_ELY,0.65,-,Hydrogen System
+Electrolyzer minimum load fraction,u_ELY_min,0.10,-,Hydrogen System
+Fuel-cell CAPEX,c_FC,1000,EUR/kW,Hydrogen System
+Fuel-cell electrical efficiency,eta_FC,0.50,-,Hydrogen System
+Fuel-cell minimum load fraction,u_FC_min,0.10,-,Hydrogen System
+Hydrogen tank CAPEX,c_tank,500,EUR/kg,Hydrogen System
+Hydrogen tank minimum SOC,SOC_tank_min,0.05,-,Hydrogen System
+Hydrogen lower heating value,LHV_H2,33.33,kWh/kg,Hydrogen System
+Grid contractual capacity (import/export),P_grid_max,58.0,kW,Grid & Market
+Electricity purchase-to-sale multiplier,mu_price,2.0,-,Grid & Market
+Real discount rate (WACC),r,0.07,-,Finance
+Project planning lifetime,N_proj,20,years,Finance

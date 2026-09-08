@@ -1,0 +1,10 @@
+Driver,Category,Unit,Base_Val,Low_Val,High_Val,Base_SSR,Low_SSR,High_SSR,Delta_Low_pp,Delta_High_pp,Mean_Elasticity
+BESS Round-Trip Eff. (RTE),Technological,-,0.9,0.8,0.95,73.0,72.0,74.0,-1.0,1.0,0.1849315068493152
+BESS CAPEX,Economic,EUR/kWh,300.0,200.0,480.0,73.0,77.0,69.0,4.0,-4.0,0.1278538812785388
+Fuel Cell Efficiency,Technological,-,0.5,0.45,0.6,73.0,74.0,72.0,1.0,-1.0,0.1027397260273972
+Electrolyzer Efficiency,Technological,-,0.65,0.55,0.75,73.0,74.0,72.0,1.0,-1.0,0.0890410958904109
+Price Spread (Buy/Sell),Market,-,2.0,1.5,3.0,73.0,74.0,72.0,1.0,-1.0,0.0410958904109589
+Electrolyzer CAPEX,Economic,EUR/kW,1000.0,400.0,2500.0,73.0,71.0,77.0,-2.0,4.0,0.0410958904109589
+Fuel Cell CAPEX,Economic,EUR/kW,1000.0,400.0,3000.0,73.0,72.0,75.0,-1.0,2.0,0.0182648401826484
+PUN Electricity Price Level,Market,EUR/kWh,0.2149,0.0779,0.6079,73.0,72.0,74.0,-1.0,1.0,0.0144892635418391
+H2 Tank CAPEX,Economic,EUR/kg,500.0,266.0,1000.0,73.0,73.0,74.0,0.0,1.0,0.0068493150684931

@@ -3,7 +3,7 @@
     "campaign_id": "paper_scale_sensitivity",
     "description": "Full paper-scale sensitivity campaign. Exact rerun requires confidential full-year demand data.",
     "demand_year": 2024,
-    "pv_year": 2005,
+    "pv_year": 2018,
     "expand_weather_variants": true,
     "weather_profiles_path": "configs/paper_weather_variants.json",
     "weather_variants": [

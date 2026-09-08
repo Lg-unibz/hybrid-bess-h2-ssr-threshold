@@ -1,8 +1,9 @@
 {
   "dataset": "synthetic seasonal weeks",
-  "solver": "highs",
+  "solver": "gurobi",
   "rows": 672,
   "ssr_targets": [
+    0.6,
     0.7
   ]
 }

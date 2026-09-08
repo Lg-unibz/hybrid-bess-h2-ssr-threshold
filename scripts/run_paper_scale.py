@@ -9,9 +9,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_INPUTS = [
     "input/processed/electricity_demand/csv/2024_h.csv",
-    "input/processed/pv_production/csv/production_global_2005.csv",
-    "input/processed/pv_production/csv/production_global_2011.csv",
+    "input/processed/pv_production/csv/production_global_2007.csv",
     "input/processed/pv_production/csv/production_global_2014.csv",
+    "input/processed/pv_production/csv/production_global_2018.csv",
     "input/processed/prices/csv/pun_2020.csv",
     "input/processed/prices/csv/pun_2022.csv",
     "input/processed/prices/csv/pun_2024.csv",

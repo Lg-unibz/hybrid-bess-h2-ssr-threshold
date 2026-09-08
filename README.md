@@ -15,7 +15,7 @@ The model is a mixed-integer linear program (MILP) that jointly optimizes storag
 - A safe paper-scale preflight helper under `scripts/run_paper_scale.py`.
 - Public documentation for data restrictions and reproducibility levels.
 - A helper to export non-confidential paper aggregate CSVs from a private `run_summary` file.
-- One non-confidential baseline aggregate table from the manuscript.
+- Complete non-confidential aggregate tabular outputs supporting the manuscript (Tables 1, 2, 3, D.1, D.2, D.3, D.4, and the full 2018 baseline trajectory).
 
 ## What Is Not Included
 
@@ -88,32 +88,32 @@ The full annual demand series remains confidential and is not public in this com
 
 ## Citation
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21220464.svg)](https://doi.org/10.5281/zenodo.21220464)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21220830.svg)](https://doi.org/10.5281/zenodo.21220830)
 
-If you use this repository, please cite it as:
+If you use this repository or companion data, please cite the associated manuscript and this software release:
 
 ```bibtex
 @software{gambadori_hybrid_2026,
   author       = {Gambadori, Lorenzo and Alberizzi, Jacopo C. and Renzi, Massimiliano},
   title        = {Hybrid BESS-H2 SSR Threshold Public Companion},
-  month        = jul,
+  month        = sep,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {v1.0.0-paper-submission},
-  doi          = {10.5281/zenodo.21220464},
-  url          = {https://doi.org/10.5281/zenodo.21220464}
+  version      = {v1.0.1-paper-submission},
+  doi          = {10.5281/zenodo.21220830},
+  url          = {https://doi.org/10.5281/zenodo.21220830}
 }
 ```
 
-See also [CITATION.cff](file:///c:/Users/LGambadori/Downloads/hybrid-bess-h2-ssr-threshold-public/CITATION.cff).
+See also [CITATION.cff](CITATION.cff).
 
 ## License
 
-Code and synthetic demo data are released under the license in `LICENSE`, subject to manuscript and institutional approval before public posting.
+Code, synthetic demo data, and non-confidential aggregate results are released under the MIT license in `LICENSE`.
 
 ## Contact
 
-For questions regarding this repository or the associated manuscript, please contact the corresponding author:
+For questions regarding this repository or the associated manuscript, please contact:
 
 **Lorenzo Gambadori**  
 Faculty of Engineering, Free University of Bozen--Bolzano  

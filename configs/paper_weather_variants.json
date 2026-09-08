@@ -8,18 +8,18 @@
       "source_type": "historical_year"
     },
     "median": {
-      "pv_year": 2005,
-      "alignment_year": 2005,
-      "label": "median_solar_year",
+      "pv_year": 2018,
+      "alignment_year": 2018,
+      "label": "reference_solar_year",
       "source_type": "historical_year"
     },
     "positive_extreme": {
-      "pv_year": 2011,
-      "alignment_year": 2011,
+      "pv_year": 2007,
+      "alignment_year": 2007,
       "label": "favourable_solar_year",
       "source_type": "historical_year"
     }
   },
-  "selection_method": "Representative historical PVGIS years selected in the private workflow from annual plane-of-array irradiation/specific-yield statistics."
+  "selection_method": "Representative historical PVGIS years selected from the descriptor-based screening over all 16 PVGIS years (2005-2020)."
 }
 

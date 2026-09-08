@@ -1,0 +1,20 @@
+Scenario_ID,Description,Gap_5e4,Gap_1e4,Gap_2e5
+SC00_baseline_pv2018,Plain-Vanilla Baseline,73,73,73
+SC_econ_bess_capex_low,BESS CAPEX Low (-20%),76,76,76
+SC_econ_bess_capex_high,BESS CAPEX High (+20%),71,71,71
+SC_econ_ely_capex_low,Electrolyzer CAPEX Low (-20%),72,72,72
+SC_econ_ely_capex_high,Electrolyzer CAPEX High (+20%),74,74,74
+SC_econ_fc_capex_low,Fuel Cell CAPEX Low (-20%),72,72,72
+SC_econ_fc_capex_high,Fuel Cell CAPEX High (+20%),74,74,74
+SC_econ_tank_capex_low,Tank CAPEX Low (-20%),71,71,71
+SC_econ_tank_capex_high,Tank CAPEX High (+20%),75,75,75
+SC_tech_bess_rte_low,BESS RTE Low (-5 pp),70,70,70
+SC_tech_bess_rte_high,BESS RTE High (+5 pp),76,76,76
+SC_tech_ely_eff_low,Electrolyzer Efficiency Low (-5 pp),75,75,75
+SC_tech_ely_eff_high,Electrolyzer Efficiency High (+5 pp),71,71,71
+SC_tech_fc_eff_low,Fuel Cell Efficiency Low (-5 pp),75,75,75
+SC_tech_fc_eff_high,Fuel Cell Efficiency High (+5 pp),71,71,71
+SC_struct_pun_price_low_p10,PUN Price Shock Low (2020),73,73,73
+SC_struct_pun_price_high_p90,PUN Price Shock High (2022),73,73,73
+SC_struct_price_spread_low,Price Spread Low (1.0x),73,73,73
+SC_struct_price_spread_high,Price Spread High (3.0x),73,73,73

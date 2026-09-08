@@ -5,7 +5,7 @@ Public companion repository manifest
   Ignore rules for Python caches, environments, private input folders, logs, and solver by-products.
 
 CITATION.cff
-  Citation metadata with version placeholder v1.0.0-paper-submission. DOI and final authors should be updated before release.
+  Citation metadata including authors, Zenodo DOI 10.5281/zenodo.21220830, and version v1.0.1-paper-submission.
 
 DATA_AVAILABILITY.md
   Explains confidential demand restrictions, synthetic demo data, public PVGIS/PUN sources, and expected full-scale paths.
@@ -71,10 +71,10 @@ results/demo/.gitkeep
   Keeps the demo-output directory visible before running the workflow.
 
 results/paper_aggregated/README.md
-  Explains included and missing aggregate paper-output CSVs and how to export them from a private run summary.
+  Data dictionary and documentation for all non-confidential manuscript summary tables.
 
-results/paper_aggregated/baseline_absolute_values_median_year.csv
-  Non-confidential aggregate baseline values from the manuscript table.
+results/paper_aggregated/*.csv
+  Non-confidential aggregate tabular outputs supporting the manuscript (Tables 1, 2, 3, D.1, D.2, D.3, D.4, and the full 2018 baseline trajectory).
 
 scripts/__init__.py
   Allows module execution of scripts.
