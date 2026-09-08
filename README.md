@@ -1,6 +1,6 @@
 # Hybrid BESS-H2 SSR Threshold Public Companion
 
-This repository is a public, reviewer-facing companion for a Journal of Energy Storage manuscript on the transition from battery-only storage to hybrid battery-hydrogen storage in a grid-connected PV prosumer.
+This repository is a public, reviewer-facing companion for an Energy Conversion and Management manuscript on the transition from battery-only storage to hybrid battery-hydrogen storage in a grid-connected PV prosumer.
 
 The full paper-scale campaign was originally executed on an HPC cluster through Slurm. Those cluster-specific submission scripts are not included here. This public companion is designed to be downloaded and tested locally in isolation.
 
@@ -15,7 +15,7 @@ The model is a mixed-integer linear program (MILP) that jointly optimizes storag
 - A safe paper-scale preflight helper under `scripts/run_paper_scale.py`.
 - Public documentation for data restrictions and reproducibility levels.
 - A helper to export non-confidential paper aggregate CSVs from a private `run_summary` file.
-- Complete non-confidential aggregate tabular outputs supporting the manuscript (Tables 1, 2, 3, D.1, D.2, D.3, D.4, and the full 2018 baseline trajectory).
+- Complete non-confidential aggregate tabular outputs supporting the manuscript (PUN market price statistics, baseline assumptions, structural stress-test matrix, weather descriptor screening, OFAT sensitivity metrics, paired baseline cost frontiers, solver certificate audit, and the full 2018 baseline trajectory).
 
 ## What Is Not Included
 
@@ -65,9 +65,9 @@ src/                      Model, solver, scenario, loader, and export code
 Exact paper-scale reruns require inputs that are not public and were originally run through HPC/Slurm:
 
 - `input/processed/electricity_demand/csv/2024_h.csv`
-- `input/processed/pv_production/csv/production_global_2005.csv`
-- `input/processed/pv_production/csv/production_global_2011.csv`
+- `input/processed/pv_production/csv/production_global_2007.csv`
 - `input/processed/pv_production/csv/production_global_2014.csv`
+- `input/processed/pv_production/csv/production_global_2018.csv`
 - `input/processed/prices/csv/pun_2020.csv`
 - `input/processed/prices/csv/pun_2022.csv`
 - `input/processed/prices/csv/pun_2024.csv`

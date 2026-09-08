@@ -69,6 +69,7 @@ def _run_case(df, payload, solver_name: str, ssr_target: float | None, time_limi
         df=df,
         technical=payload.technical,
         economics=payload.economics,
+        allow_grid_to_bess_charging=False,
     )
     model = build_hybrid_model(inputs)
     outcome = solve_hybrid_model(

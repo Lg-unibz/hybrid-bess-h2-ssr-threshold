@@ -32,9 +32,9 @@ They are intended for local alpha testing and do not reproduce the annual manusc
 The paper-scale workflow uses PV production derived from PVGIS and electricity prices derived from public PUN records. Expected processed paths are:
 
 ```text
-input/processed/pv_production/csv/production_global_2005.csv
-input/processed/pv_production/csv/production_global_2011.csv
+input/processed/pv_production/csv/production_global_2007.csv
 input/processed/pv_production/csv/production_global_2014.csv
+input/processed/pv_production/csv/production_global_2018.csv
 input/processed/prices/csv/pun_2020.csv
 input/processed/prices/csv/pun_2022.csv
 input/processed/prices/csv/pun_2024.csv

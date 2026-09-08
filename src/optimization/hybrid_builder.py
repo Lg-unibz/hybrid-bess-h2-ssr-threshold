@@ -62,7 +62,7 @@ class HybridModelInputs:
     df: pd.DataFrame
     technical: HybridTechnicalInputs
     economics: HybridEconomicInputs
-    allow_grid_to_bess_charging: bool = True
+    allow_grid_to_bess_charging: bool = False
 
 
 def build_hybrid_model(inputs: HybridModelInputs) -> pyo.ConcreteModel:
@@ -163,6 +163,8 @@ def build_hybrid_model(inputs: HybridModelInputs) -> pyo.ConcreteModel:
     m.p_bess_dis_kw = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, p_dis_upper))
     m.bess_soc_kwh = pyo.Var(m.T, within=pyo.NonNegativeReals, bounds=(0.0, soc_upper))
     m.bess_soc_initial_kwh = pyo.Var(within=pyo.NonNegativeReals, bounds=(0.0, soc_upper))
+    m.u_bess_ch = pyo.Var(m.T, within=pyo.Binary)
+    m.u_bess_dis = pyo.Var(m.T, within=pyo.Binary)
 
     # PV decomposition variables (Explicit sub-flows)
     m.p_pv_to_load_kw = pyo.Var(m.T, within=pyo.NonNegativeReals)
@@ -283,7 +285,18 @@ def build_hybrid_model(inputs: HybridModelInputs) -> pyo.ConcreteModel:
         expr=m.bess_soc_initial_kwh <= m.bess_soc_max * m.bess_add_kwh
     )
 
-    # BESS capacity limits (Continuous C-rate formulation with non-simultaneity guaranteed by round-trip losses eta < 1)
+    # BESS operational mode constraints (Eqs. 33-35: mutually exclusive charge/discharge modes)
+    m.c_bess_ch_big_m = pyo.Constraint(
+        m.T, rule=lambda model, t: model.p_bess_ch_kw[t] <= p_ch_upper * model.u_bess_ch[t]
+    )
+    m.c_bess_dis_big_m = pyo.Constraint(
+        m.T, rule=lambda model, t: model.p_bess_dis_kw[t] <= p_dis_upper * model.u_bess_dis[t]
+    )
+    m.c_bess_mode = pyo.Constraint(
+        m.T, rule=lambda model, t: model.u_bess_ch[t] + model.u_bess_dis[t] <= 1
+    )
+
+    # BESS continuous C-rate capacity limits
     m.c_bess_ch_cap = pyo.Constraint(
         m.T, rule=lambda model, t: model.p_bess_ch_kw[t] <= model.bess_c_rate * model.bess_add_kwh
     )
