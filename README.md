@@ -99,7 +99,7 @@ If you use this repository or companion data, please cite the associated manuscr
   month        = sep,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {v1.0.1-paper-submission},
+  version      = {v1.0.2-paper-submission},
   doi          = {10.5281/zenodo.21220830},
   url          = {https://doi.org/10.5281/zenodo.21220830}
 }

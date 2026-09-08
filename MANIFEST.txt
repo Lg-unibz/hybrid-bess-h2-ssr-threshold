@@ -5,7 +5,7 @@ Public companion repository manifest
   Ignore rules for Python caches, environments, private input folders, logs, and solver by-products.
 
 CITATION.cff
-  Citation metadata including authors, Zenodo DOI 10.5281/zenodo.21220830, and version v1.0.1-paper-submission.
+  Citation metadata including authors, Zenodo DOI 10.5281/zenodo.21220830, and version v1.0.2-paper-submission.
 
 DATA_AVAILABILITY.md
   Explains confidential demand restrictions, synthetic demo data, public PVGIS/PUN sources, and expected full-scale paths.

@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this companion repository, please cite the associated manuscript and this software release."
 title: "Hybrid BESS-H2 SSR Threshold Public Companion"
-version: "v1.0.1-paper-submission"
+version: "v1.0.2-paper-submission"
 doi: "10.5281/zenodo.21220830"
 date-released: "2026-09-08"
 authors:
